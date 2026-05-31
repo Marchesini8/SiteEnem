@@ -1,33 +1,59 @@
 require("dotenv").config();
 
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
-const next = require("next");
 
-const dev = process.env.NODE_ENV !== "production";
-const port = Number(process.env.PORT || 3000);
-const host = process.env.HOST || process.env.HOSTNAME || "0.0.0.0";
+const paymentRoutes = require("./routes/payments");
+const webhookRoutes = require("./routes/webhooks");
 
-const nextApp = next({ dev, hostname: host, port });
-const handle = nextApp.getRequestHandler();
+const app = express();
+const port = process.env.PORT || 3000;
+const host = "0.0.0.0";
 
-nextApp.prepare().then(() => {
-  const app = express();
+app.use(cors());
+app.use(express.json({ limit: "2mb" }));
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
-  app.use(cors());
-  app.use(express.json({ limit: "2mb" }));
+app.get("/styles.css", (_req, res) => {
+  res.sendFile(path.join(__dirname, "styles.css"));
+});
 
-  app.get("/health", (_req, res) => {
-    res.json({
-      ok: true,
-      service: "guia-definitivo-enem-2026",
-      uptime: Math.round(process.uptime()),
-    });
+app.get("/script.js", (_req, res) => {
+  res.sendFile(path.join(__dirname, "script.js"));
+});
+
+app.get("/checkout.css", (_req, res) => {
+  res.sendFile(path.join(__dirname, "checkout.css"));
+});
+
+app.get("/checkout.js", (_req, res) => {
+  res.sendFile(path.join(__dirname, "checkout.js"));
+});
+
+app.use("/api/payments", paymentRoutes);
+app.use("/api/webhooks", webhookRoutes);
+
+app.get("/health", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "guia-definitivo-enem-2026",
+    uptime: Math.round(process.uptime()),
   });
+});
 
-  app.use((req, res) => handle(req, res));
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
-  app.listen(port, host, () => {
-    console.log(`Servidor rodando em http://${host}:${port}`);
-  });
+app.get("/checkout", (_req, res) => {
+  res.sendFile(path.join(__dirname, "checkout.html"));
+});
+
+app.get("/checkout.html", (_req, res) => {
+  res.sendFile(path.join(__dirname, "checkout.html"));
+});
+
+app.listen(port, host, () => {
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });

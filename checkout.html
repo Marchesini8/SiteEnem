@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Checkout Seguro - Guia Definitivo ENEM 2026</title>
+    <meta name="description" content="Checkout seguro via Pix para finalizar seu Guia Definitivo ENEM 2026." />
+    <link rel="stylesheet" href="/checkout.css" />
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+      fbq("init", "1499267518361019");
+      fbq("track", "PageView");
+      fbq("track", "InitiateCheckout", { value: 29.9, currency: "BRL", content_name: "Guia Definitivo ENEM 2026" });
+    </script>
+  </head>
+  <body>
+    <header class="checkout-topbar">🛡 PAGAMENTO 100% SEGURO</header>
+    <main class="checkout-shell">
+      <section class="secure-banner">
+        <img src="/images/enem-checkout-banner.png" alt="ENEM" />
+      </section>
+
+      <form id="checkout-page-form" class="checkout-grid">
+        <section class="checkout-panel">
+          <div class="section-title"><span>1</span><h1>Identifique-se</h1></div>
+          <p class="helper">Informe seus dados para receber o acesso ao Drive completo por e-mail.</p>
+          <label>Nome completo<input name="name" autocomplete="name" required placeholder="Seu nome completo" /></label>
+          <label>E-mail<input name="email" type="email" autocomplete="email" required placeholder="seu@email.com" /></label>
+          <label>CPF<input name="document" placeholder="000.000.000-00" /></label>
+          <label>WhatsApp<input name="phone" placeholder="(00) 00000-0000" /></label>
+        </section>
+
+        <section class="checkout-panel">
+          <div class="product-box">
+            <p>Você está adquirindo:</p>
+            <div class="product-row">
+              <img src="/images/enem-drive-offer.png" alt="" />
+              <div>
+                <strong>Guia Definitivo ENEM 2026</strong>
+                <small>Guia + simulados + Drive completo</small>
+                <span>R$ 29,90</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pix-method">
+            <strong>▣ PAGAMENTO VIA PIX</strong>
+            <p>Após a confirmação do pagamento, o acesso ao Drive completo será liberado pelo e-mail informado acima.</p>
+          </div>
+
+          <div class="checkout-total"><strong>Total:</strong><b>R$ 29,90</b></div>
+        </section>
+
+        <section class="safe-box">
+          <span><img src="/images/verified-badge.png" alt="" /> Dados protegidos</span>
+          <span><img src="/images/verified-badge.png" alt="" /> Compra segura</span>
+          <span><img src="/images/verified-badge.png" alt="" /> Garantia de 7 dias</span>
+        </section>
+
+        <button class="generate-pix" type="submit">Gerar Pix - R$ 29,90</button>
+        <p class="checkout-feedback" id="checkout-feedback" role="status"></p>
+      </form>
+
+      <section class="pix-result-page" id="pix-result-page" hidden>
+        <h2>Pix gerado</h2>
+        <div class="qr-box-page">
+          <img id="checkout-pix-qr" alt="QR Code Pix" />
+          <span id="checkout-pix-empty">QR Code indisponível. Use o código Pix copia e cola.</span>
+        </div>
+        <label>Código Pix copia e cola<textarea id="checkout-pix-code" readonly rows="4"></textarea></label>
+        <button class="copy-pix-page" type="button">Copiar código Pix</button>
+      </section>
+    </main>
+
+    <script src="/checkout.js"></script>
+  </body>
+</html>

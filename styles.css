@@ -1,0 +1,508 @@
+:root {
+  --blue: #155cff;
+  --navy: #10275f;
+  --yellow: #ffd335;
+  --green: #10c866;
+  --page: #f3f7ff;
+  --text: #14213d;
+  --muted: #64748b;
+  --line: #d9e6ff;
+  --shadow: 0 22px 70px rgba(16, 89, 255, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 44px;
+  align-items: center;
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 42px 24px 92px;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 320px;
+  background: linear-gradient(#eef6ff, #fff);
+  z-index: -1;
+}
+
+.badges,
+.hero-actions,
+.quick-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.timer,
+.pill {
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff8d9;
+  color: var(--navy);
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.pill {
+  background: #eaf2ff;
+  color: var(--blue);
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+.hero h1 {
+  max-width: 760px;
+  margin: 22px 0 18px;
+  color: var(--navy);
+  font-size: clamp(2.35rem, 5vw, 4rem);
+  line-height: 1.04;
+  font-weight: 950;
+}
+
+.hero p,
+.section-head p,
+.offer p {
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.buy-button {
+  min-height: 54px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--yellow);
+  color: var(--navy);
+  padding: 0 24px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 16px 35px rgba(255, 211, 53, 0.38);
+  animation: pulseSoft 2.8s ease-in-out infinite;
+}
+
+.buy-button:hover {
+  transform: translateY(-2px);
+}
+
+.secure {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.quick-list {
+  margin-top: 24px;
+}
+
+.quick-list span,
+.content-grid span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.quick-list img,
+.content-grid img {
+  width: 22px;
+  height: 22px;
+  animation: pulseSoft 2.8s ease-in-out infinite;
+}
+
+.hero-media {
+  position: relative;
+}
+
+.video-shell {
+  position: relative;
+  max-width: 520px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--navy);
+  box-shadow: var(--shadow);
+  animation: pulseSoft 3.4s ease-in-out infinite;
+}
+
+.video-shell video {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  background: var(--navy);
+  object-fit: cover;
+}
+
+.play-button {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: rgba(16, 39, 95, 0.34);
+  cursor: pointer;
+}
+
+.play-button span {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 2.4rem;
+  box-shadow: 0 18px 44px rgba(255, 211, 53, 0.42);
+  animation: pulseSoft 2.2s ease-in-out infinite;
+}
+
+.floating-card {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  border-radius: 12px;
+  background: white;
+  padding: 12px 16px;
+  color: var(--navy);
+  font-size: 0.84rem;
+  font-weight: 950;
+  box-shadow: 0 16px 40px rgba(12, 31, 70, 0.16);
+}
+
+.floating-card.left {
+  left: -8px;
+  bottom: 72px;
+}
+
+.floating-card.right {
+  right: 6px;
+  top: 22px;
+  background: var(--blue);
+  color: white;
+}
+
+.section {
+  padding: 82px 24px;
+}
+
+.benefits,
+.testimonials,
+.faq {
+  background: var(--page);
+}
+
+.section-head {
+  max-width: 740px;
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.section-head span,
+.offer > div > span {
+  color: var(--blue);
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.section-head h2,
+.offer h2 {
+  margin: 12px 0;
+  color: var(--navy);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+  font-weight: 950;
+}
+
+.benefit-grid,
+.content-grid,
+.testimonial-grid {
+  display: grid;
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  gap: 16px;
+}
+
+.benefit-grid {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.benefit-grid article,
+.content-grid span,
+.testimonial-grid article,
+.faq details {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(12, 31, 70, 0.06);
+}
+
+.benefit-grid article {
+  padding: 22px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit-grid article:hover,
+.testimonial-grid article:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 42px rgba(12, 31, 70, 0.12);
+}
+
+.benefit-grid article > img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin-bottom: 18px;
+  animation: pulseSoft 2.8s ease-in-out infinite;
+}
+
+.benefit-grid b {
+  display: block;
+  color: var(--navy);
+  line-height: 1.35;
+}
+
+.content-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.content-grid span {
+  padding: 18px;
+}
+
+.testimonial-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.testimonial-grid article {
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.person {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.person img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 5px #eef6ff;
+}
+
+.person b,
+.person small {
+  display: block;
+}
+
+.person b {
+  color: var(--navy);
+}
+
+.person small {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.testimonial-grid p {
+  color: #334155;
+  line-height: 1.7;
+}
+
+.offer {
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  gap: 32px;
+  align-items: center;
+  padding: 82px 24px;
+  background: var(--navy);
+  color: white;
+}
+
+.offer > * {
+  width: min(100%, 1180px);
+}
+
+.offer h2,
+.offer p {
+  color: white;
+}
+
+.price-card {
+  justify-self: end;
+  width: 100%;
+  max-width: 390px;
+  border-radius: 18px;
+  background: white;
+  padding: 28px;
+  color: var(--navy);
+}
+
+.price-card strong {
+  display: block;
+  margin: 8px 0 18px;
+  color: var(--blue);
+  font-size: 3rem;
+  font-weight: 950;
+}
+
+.price-card .buy-button {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.faq {
+  display: grid;
+  gap: 12px;
+}
+
+.faq details {
+  width: min(100%, 780px);
+  margin: 0 auto;
+  padding: 18px 20px;
+}
+
+.faq summary {
+  color: var(--navy);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.mobile-bar {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 30;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 12px 14px;
+  box-shadow: 0 -12px 30px rgba(12, 31, 70, 0.12);
+}
+
+.mobile-bar small,
+.mobile-bar b {
+  display: block;
+}
+
+.mobile-bar small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mobile-bar b {
+  color: var(--blue);
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 40px 24px 108px;
+  background: var(--navy);
+  color: white;
+}
+
+footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+footer a {
+  color: #dbeafe;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+@keyframes pulseSoft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .offer {
+    grid-template-columns: 1fr;
+  }
+
+  .benefit-grid,
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 28px;
+  }
+
+  .floating-card {
+    display: none;
+  }
+
+  .mobile-bar {
+    display: flex;
+  }
+
+  .mobile-bar .buy-button {
+    min-height: 46px;
+    padding-inline: 18px;
+  }
+}
