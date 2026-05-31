@@ -44,10 +44,34 @@
         <section class="checkout-panel">
           <div class="section-title"><span>1</span><h1>Identifique-se</h1></div>
           <p class="helper">Informe seus dados para receber o acesso ao Drive completo por e-mail.</p>
-          <label>Nome completo<input name="name" autocomplete="name" required placeholder="Seu nome completo" /></label>
-          <label>E-mail<input name="email" type="email" autocomplete="email" required placeholder="seu@email.com" /></label>
-          <label>CPF<input name="document" inputmode="numeric" autocomplete="off" maxlength="14" required placeholder="000.000.000-00" /></label>
-          <label>WhatsApp<input name="phone" inputmode="numeric" autocomplete="tel" maxlength="15" required placeholder="(00) 00000-0000" /></label>
+          <div class="field-label">
+            <span>Nome completo</span>
+            <div class="field-control">
+              <input name="name" autocomplete="name" required placeholder="Seu nome completo" />
+              <button class="edit-field" type="button" aria-label="Editar nome completo" hidden>&#9998;</button>
+            </div>
+          </div>
+          <div class="field-label">
+            <span>E-mail</span>
+            <div class="field-control">
+              <input name="email" type="email" autocomplete="email" required placeholder="seu@email.com" />
+              <button class="edit-field" type="button" aria-label="Editar e-mail" hidden>&#9998;</button>
+            </div>
+          </div>
+          <div class="field-label">
+            <span>CPF</span>
+            <div class="field-control">
+              <input name="document" inputmode="numeric" autocomplete="off" maxlength="14" required placeholder="000.000.000-00" />
+              <button class="edit-field" type="button" aria-label="Editar CPF" hidden>&#9998;</button>
+            </div>
+          </div>
+          <div class="field-label">
+            <span>WhatsApp</span>
+            <div class="field-control">
+              <input name="phone" inputmode="numeric" autocomplete="tel" maxlength="15" required placeholder="(00) 00000-0000" />
+              <button class="edit-field" type="button" aria-label="Editar WhatsApp" hidden>&#9998;</button>
+            </div>
+          </div>
         </section>
 
         <section class="checkout-panel">
@@ -85,9 +109,10 @@
           <img id="checkout-pix-qr" alt="QR Code Pix" />
           <span id="checkout-pix-empty">QR Code indisponível. Use o código Pix copia e cola.</span>
         </div>
-        <label>Código Pix copia e cola<textarea id="checkout-pix-code" readonly rows="4"></textarea></label>
+        <label>Código Pix copia e cola<textarea id="checkout-pix-code" readonly rows="4" title="Clique para copiar o código Pix"></textarea></label>
         <button class="copy-pix-page" type="button">Copiar código Pix</button>
       </section>
+      <div class="pix-copy-toast" id="pix-copy-toast" role="status" aria-live="polite" hidden>Copiado com sucesso</div>
     </main>
 
     <script src="/checkout.js"></script>

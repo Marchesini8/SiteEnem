@@ -6,8 +6,12 @@ const checkoutPixQr = document.querySelector("#checkout-pix-qr");
 const checkoutPixEmpty = document.querySelector("#checkout-pix-empty");
 const checkoutPixCode = document.querySelector("#checkout-pix-code");
 const copyPixPageButton = document.querySelector(".copy-pix-page");
+const pixCopyToast = document.querySelector("#pix-copy-toast");
+const customerInputs = Array.from(checkoutForm?.querySelectorAll("input") || []);
+const editFieldButtons = Array.from(checkoutForm?.querySelectorAll(".edit-field") || []);
 const documentInput = checkoutForm?.querySelector('input[name="document"]');
 const phoneInput = checkoutForm?.querySelector('input[name="phone"]');
+let pixCopyToastTimer;
 
 const productPayload = {
   value: 29.9,
@@ -124,6 +128,33 @@ function updateGeneratePixState() {
   generatePixButton.disabled = !formIsValid;
 }
 
+function setCheckoutFieldsLocked(isLocked) {
+  customerInputs.forEach((input) => {
+    input.readOnly = isLocked;
+    input.classList.remove("is-editing");
+  });
+
+  editFieldButtons.forEach((button) => {
+    button.hidden = !isLocked;
+  });
+}
+
+function unlockCheckoutField(input) {
+  if (!input || !generatePixButton || !pixResultPage) return;
+
+  input.readOnly = false;
+  input.classList.add("is-editing");
+  pixResultPage.hidden = true;
+  generatePixButton.classList.remove("is-hidden");
+  setFeedback("Corrija o dado e gere um novo Pix.", "info");
+  updateGeneratePixState();
+
+  window.setTimeout(() => {
+    input.focus();
+    input.select();
+  }, 50);
+}
+
 function normalizeQrImageSource(qrImage = "", pixPayload = "") {
   const value = String(qrImage || "").trim();
 
@@ -152,7 +183,38 @@ function showPixResult(data = {}) {
 
   pixResultPage.hidden = false;
   generatePixButton.classList.add("is-hidden");
+  setCheckoutFieldsLocked(true);
   window.setTimeout(() => pixResultPage.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
+}
+
+function showPixCopyToast() {
+  if (!pixCopyToast) return;
+
+  window.clearTimeout(pixCopyToastTimer);
+  pixCopyToast.hidden = false;
+  pixCopyToastTimer = window.setTimeout(() => {
+    pixCopyToast.hidden = true;
+  }, 1600);
+}
+
+async function copyPixCode() {
+  const code = checkoutPixCode?.value || "";
+  if (!code) return;
+
+  try {
+    await navigator.clipboard.writeText(code);
+  } catch (error) {
+    checkoutPixCode.focus();
+    checkoutPixCode.select();
+    document.execCommand("copy");
+    checkoutPixCode.setSelectionRange(0, 0);
+  }
+
+  showPixCopyToast();
+  copyPixPageButton.textContent = "Codigo copiado";
+  window.setTimeout(() => {
+    copyPixPageButton.textContent = "Copiar codigo Pix";
+  }, 1500);
 }
 
 function getTrackingData() {
@@ -171,6 +233,7 @@ trackMetaEvent("PageView");
 
 checkoutForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
+  setCheckoutFieldsLocked(false);
 
   const formData = new FormData(checkoutForm);
   const payload = Object.fromEntries(formData.entries());
@@ -225,6 +288,7 @@ checkoutForm?.addEventListener("submit", async (event) => {
   } catch (error) {
     setFeedback(getCheckoutErrorMessage(error), "error");
     generatePixButton.classList.remove("is-hidden");
+    setCheckoutFieldsLocked(false);
   } finally {
     generatePixButton.textContent = "Gerar Pix - R$ 29,90";
     updateGeneratePixState();
@@ -244,13 +308,10 @@ phoneInput?.addEventListener("input", () => {
 checkoutForm?.addEventListener("input", updateGeneratePixState);
 updateGeneratePixState();
 
-copyPixPageButton?.addEventListener("click", async () => {
-  const code = checkoutPixCode?.value || "";
-  if (!code) return;
-
-  await navigator.clipboard.writeText(code);
-  copyPixPageButton.textContent = "Codigo copiado";
-  window.setTimeout(() => {
-    copyPixPageButton.textContent = "Copiar codigo Pix";
-  }, 1500);
+editFieldButtons.forEach((button) => {
+  const input = button.closest(".field-control")?.querySelector("input");
+  button.addEventListener("click", () => unlockCheckoutField(input));
 });
+
+copyPixPageButton?.addEventListener("click", copyPixCode);
+checkoutPixCode?.addEventListener("click", copyPixCode);

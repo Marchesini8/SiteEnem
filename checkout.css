@@ -116,13 +116,22 @@ img {
   line-height: 1.55;
 }
 
-label {
+label,
+.field-label {
   display: grid;
   gap: 8px;
   margin-top: 14px;
   color: #4b5874;
   font-size: 0.86rem;
   font-weight: 800;
+}
+
+.field-label > span {
+  display: block;
+}
+
+.field-control {
+  position: relative;
 }
 
 input,
@@ -142,8 +151,47 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(21, 92, 255, 0.12);
 }
 
+input[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.field-control input[readonly] {
+  padding-right: 50px;
+}
+
+.field-control input.is-editing {
+  background: white;
+  color: var(--navy);
+  cursor: text;
+}
+
 input.is-invalid {
   border-color: #d92d20;
+}
+
+.edit-field {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.edit-field[hidden] {
+  display: none;
 }
 
 .product-box {
@@ -333,6 +381,10 @@ input.is-invalid {
   display: none;
 }
 
+#checkout-pix-code {
+  cursor: pointer;
+}
+
 .copy-pix-page {
   min-height: 52px;
   border: 0;
@@ -341,6 +393,26 @@ input.is-invalid {
   color: white;
   font-weight: 950;
   cursor: pointer;
+}
+
+.pix-copy-toast {
+  position: fixed;
+  top: 118px;
+  left: 50%;
+  z-index: 60;
+  border-radius: 2px;
+  background: #3b2a0f;
+  color: white;
+  padding: 4px 9px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.2);
+  transform: translateX(-50%);
+}
+
+.pix-copy-toast[hidden] {
+  display: none;
 }
 
 @keyframes pulseSoft {
