@@ -41,8 +41,8 @@
           <p class="helper">Informe seus dados para receber o acesso ao Drive completo por e-mail.</p>
           <label>Nome completo<input name="name" autocomplete="name" required placeholder="Seu nome completo" /></label>
           <label>E-mail<input name="email" type="email" autocomplete="email" required placeholder="seu@email.com" /></label>
-          <label>CPF<input name="document" placeholder="000.000.000-00" /></label>
-          <label>WhatsApp<input name="phone" placeholder="(00) 00000-0000" /></label>
+          <label>CPF<input name="document" inputmode="numeric" autocomplete="off" maxlength="14" required placeholder="000.000.000-00" /></label>
+          <label>WhatsApp<input name="phone" inputmode="numeric" autocomplete="tel" maxlength="15" required placeholder="(00) 00000-0000" /></label>
         </section>
 
         <section class="checkout-panel">
@@ -72,7 +72,7 @@
           <span><img src="/images/verified-badge.png" alt="" /> Garantia de 7 dias</span>
         </section>
 
-        <button class="generate-pix" type="submit">Gerar Pix - R$ 29,90</button>
+        <button class="generate-pix" type="submit" disabled>Gerar Pix - R$ 29,90</button>
         <p class="checkout-feedback" id="checkout-feedback" role="status"></p>
       </form>
 

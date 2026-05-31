@@ -4,6 +4,33 @@ const paymentStatusStore = require("./paymentStatusStore");
 const FIXED_SHIPPING_AMOUNT = 0;
 const DEFAULT_ITEM_TITLE = "Guia Definitivo ENEM 2026";
 
+function onlyDigits(value = "") {
+  return String(value).replace(/\D/g, "");
+}
+
+function isValidCpf(value = "") {
+  const cpf = onlyDigits(value);
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  let sum = 0;
+  for (let index = 0; index < 9; index += 1) sum += Number(cpf[index]) * (10 - index);
+  let digit = (sum * 10) % 11;
+  if (digit === 10) digit = 0;
+  if (digit !== Number(cpf[9])) return false;
+
+  sum = 0;
+  for (let index = 0; index < 10; index += 1) sum += Number(cpf[index]) * (11 - index);
+  digit = (sum * 10) % 11;
+  if (digit === 10) digit = 0;
+
+  return digit === Number(cpf[10]);
+}
+
+function isValidPhone(value = "") {
+  const phone = onlyDigits(value);
+  return phone.length === 10 || phone.length === 11;
+}
+
 function normalizeItemPrice(item) {
   const unitPrice = Number(item?.unitPrice || 0);
   if (unitPrice > 0) return unitPrice;
@@ -42,6 +69,21 @@ function extractTransactionHash(data) {
   );
 }
 
+function compactObject(value) {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entryValue]) => entryValue !== "" && entryValue !== null && entryValue !== undefined)
+  );
+}
+
+function getProviderMessage(error) {
+  const providerError = error.response?.data || error.message;
+
+  if (typeof providerError === "string") return providerError;
+  if (providerError?.message) return providerError.message;
+  if (providerError?.error) return providerError.error;
+  return JSON.stringify(providerError);
+}
+
 exports.createPixPayment = async ({ items, customer, delivery }) => {
   const normalizedItems = Array.isArray(items) ? items : [];
   const productTotal = normalizedItems.reduce((sum, item) => {
@@ -56,6 +98,15 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
     throw error;
   }
 
+  const customerDocument = onlyDigits(customer.document || customer.cpf || process.env.DEFAULT_DOCUMENT || "");
+  const customerPhone = onlyDigits(customer.phone_number || customer.phone || process.env.DEFAULT_PHONE_NUMBER || "");
+
+  if (!customer.name || !customer.email || !isValidCpf(customerDocument) || !isValidPhone(customerPhone)) {
+    const error = new Error("Preencha nome, e-mail, CPF e WhatsApp validos para gerar o Pix.");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const paymentApiUrl = requireEnv("PAYMENT_API_URL");
   const paymentApiKey = requireEnv("PAYMENT_API_KEY");
   const offerHash = requireEnv("IRONPAY_OFFER_HASH");
@@ -63,32 +114,37 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
   const pixEndpoint = process.env.PAYMENT_PIX_ENDPOINT || "/transactions";
   const expireInDays = Number(process.env.IRONPAY_EXPIRE_IN_DAYS || 1);
 
-  const cart = normalizedItems.map((item) => ({
+  const cart = normalizedItems.map((item) => compactObject({
+    offer_hash: offerHash,
     product_hash: productHash,
     title: item.title || DEFAULT_ITEM_TITLE,
-    cover: item.image || null,
+    cover: item.image || undefined,
     price: Math.round(normalizeItemPrice(item) * 100),
     quantity: Number(item?.qty || item?.quantity || 1),
     operation_type: 1,
     tangible: false,
   }));
 
+  const postbackUrl = process.env.IRONPAY_POSTBACK_URL || "";
+
   try {
     const response = await axios.post(
       `${paymentApiUrl}${pixEndpoint}`,
-      {
+      compactObject({
+        api_token: paymentApiKey,
         offer_hash: offerHash,
         amount: totalInCents,
         payment_method: "pix",
+        installments: 1,
         expire_in_days: expireInDays,
         transaction_origin: "api",
-        postback_url: process.env.IRONPAY_POSTBACK_URL || "",
+        postback_url: postbackUrl,
         cart,
-        customer: {
+        customer: compactObject({
           name: customer.name,
           email: customer.email,
-          phone_number: customer.phone_number || customer.phone || process.env.DEFAULT_PHONE_NUMBER || "",
-          document: customer.document || customer.cpf || process.env.DEFAULT_DOCUMENT || "",
+          phone_number: customerPhone,
+          document: customerDocument,
           street_name: customer.street_name || delivery?.address || "",
           number: customer.number || delivery?.number || "",
           complement: customer.complement || delivery?.complement || "",
@@ -96,7 +152,7 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
           city: customer.city || delivery?.city || "",
           state: customer.state || delivery?.state || process.env.DEFAULT_STATE || "",
           zip_code: customer.zip_code || delivery?.zip_code || delivery?.cep || "",
-        },
+        }),
         tracking: {
           src: "",
           utm_source: "",
@@ -105,7 +161,7 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
           utm_term: "",
           utm_content: "",
         },
-      },
+      }),
       {
         params: {
           api_token: paymentApiKey,
@@ -153,13 +209,10 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
       source: "ironpay",
     };
   } catch (error) {
-    const providerError = error.response?.data || error.message;
-    const paymentError = new Error(
-      `Falha ao gerar Pix na IronPay: ${
-        typeof providerError === "string" ? providerError : JSON.stringify(providerError)
-      }`
-    );
+    const providerMessage = getProviderMessage(error);
+    const paymentError = new Error(`Falha ao gerar Pix na IronPay: ${providerMessage}`);
     paymentError.statusCode = error.response?.status || error.statusCode || 502;
+    paymentError.providerMessage = providerMessage;
     throw paymentError;
   }
 };

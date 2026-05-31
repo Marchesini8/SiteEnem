@@ -21,7 +21,7 @@ router.post("/checkout", async (req, res) => {
   } catch (error) {
     console.error("Erro ao criar pagamento:", error.message);
     return res.status(error.statusCode || 500).json({
-      error: error.message || "Erro ao criar pagamento.",
+      error: error.providerMessage || error.message || "Erro ao criar pagamento.",
     });
   }
 });
