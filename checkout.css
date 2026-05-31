@@ -198,9 +198,19 @@ input.is-invalid {
 }
 
 .pix-method strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: var(--blue);
   font-size: 0.88rem;
   font-weight: 950;
+}
+
+.pix-method strong img {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  object-fit: contain;
 }
 
 .pix-method p {
@@ -228,21 +238,18 @@ input.is-invalid {
 }
 
 .safe-box {
-  display: grid;
-  gap: 12px;
-}
-
-.safe-box span {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 900;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px 12px;
 }
 
 .safe-box img {
-  width: 24px;
-  height: 24px;
-  animation: pulseSoft 2.8s ease-in-out infinite;
+  display: block;
+  width: 100%;
+  max-width: 680px;
+  height: auto;
 }
 
 .generate-pix {

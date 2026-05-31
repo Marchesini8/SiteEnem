@@ -444,8 +444,13 @@ p {
 }
 
 .mobile-bar small,
+.mobile-bar span,
 .mobile-bar b {
   display: block;
+}
+
+.mobile-offer-price {
+  min-width: 0;
 }
 
 .mobile-bar small {
@@ -455,8 +460,17 @@ p {
   text-transform: uppercase;
 }
 
+.mobile-bar span {
+  margin-top: 2px;
+  color: #6a7688;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
 .mobile-bar b {
   color: var(--blue);
+  font-size: 1.12rem;
+  line-height: 1.08;
 }
 
 footer {
