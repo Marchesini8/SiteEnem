@@ -9,7 +9,7 @@ const productPayload = {
 document.querySelectorAll(".buy-button").forEach((button) => {
   button.addEventListener("click", () => {
     if (typeof fbq === "function") fbq("track", "AddToCart", productPayload);
-    button.textContent = "Preparando checkout...";
+    button.textContent = "Preparando pagamento...";
     button.disabled = true;
     window.setTimeout(() => {
       window.location.href = "/checkout";
