@@ -68,6 +68,19 @@ video {
   align-items: center;
 }
 
+.site-logo {
+  display: inline-flex;
+  width: min(100%, 360px);
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+
+.site-logo img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 .timer,
 .pill {
   border-radius: 8px;
@@ -491,6 +504,12 @@ footer a {
 
   .hero {
     padding-top: 28px;
+  }
+
+  .site-logo {
+    display: flex;
+    width: min(100%, 330px);
+    margin: 0 auto 18px;
   }
 
   .floating-card {
