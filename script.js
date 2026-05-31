@@ -40,6 +40,12 @@ function trackMetaEvent(eventName, payload = productPayload) {
   }).catch(() => {});
 }
 
+function getCheckoutUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const query = params.toString();
+  return query ? `/checkout?${query}` : "/checkout";
+}
+
 trackMetaEvent("PageView");
 trackMetaEvent("ViewContent");
 
@@ -49,7 +55,7 @@ document.querySelectorAll(".buy-button").forEach((button) => {
     button.textContent = "Preparando pagamento...";
     button.disabled = true;
     window.setTimeout(() => {
-      window.location.href = "/checkout";
+      window.location.href = getCheckoutUrl();
     }, 550);
   });
 });

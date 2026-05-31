@@ -155,6 +155,18 @@ function showPixResult(data = {}) {
   window.setTimeout(() => pixResultPage.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
 }
 
+function getTrackingData() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    src: params.get("src") || "",
+    utm_source: params.get("utm_source") || "",
+    utm_medium: params.get("utm_medium") || "",
+    utm_campaign: params.get("utm_campaign") || "",
+    utm_term: params.get("utm_term") || "",
+    utm_content: params.get("utm_content") || "",
+  };
+}
+
 trackMetaEvent("PageView");
 
 checkoutForm?.addEventListener("submit", async (event) => {
@@ -198,6 +210,7 @@ checkoutForm?.addEventListener("submit", async (event) => {
           phone: phoneDigits,
         },
         delivery: {},
+        tracking: getTrackingData(),
       }),
     });
 
