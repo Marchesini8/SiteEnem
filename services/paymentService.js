@@ -190,6 +190,12 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
         paymentMethod: "pix",
         isPaid: response.data.status === "paid",
         pixCode,
+        customer: {
+          name: customer.name,
+          email: customer.email,
+          phone: customerPhone,
+          document: customerDocument,
+        },
       });
     }
 

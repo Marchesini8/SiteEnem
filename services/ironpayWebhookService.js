@@ -1,4 +1,5 @@
 const paymentStatusStore = require("./paymentStatusStore");
+const metaConversionsService = require("./metaConversionsService");
 
 function validateWebhookKey(receivedKey) {
   const expectedKey = process.env.IRONPAY_WEBHOOK_SECRET || process.env.PAYMENT_API_KEY;
@@ -16,7 +17,7 @@ function validateWebhookKey(receivedKey) {
   }
 }
 
-function processWebhook(payload) {
+async function processWebhook(payload) {
   const { transaction_hash, status, amount, payment_method, paid_at } = payload || {};
 
   if (!transaction_hash || !status || typeof amount !== "number") {
@@ -34,7 +35,24 @@ function processWebhook(payload) {
     isPaid: status === "paid",
   };
 
-  paymentStatusStore.savePayment(normalized.transactionHash, normalized);
+  const payment = paymentStatusStore.savePayment(normalized.transactionHash, normalized);
+
+  if (normalized.isPaid) {
+    metaConversionsService
+      .sendEvent({
+        eventName: "Purchase",
+        eventId: `purchase-${normalized.transactionHash}`,
+        customer: payment?.customer,
+        actionSource: "website",
+        customData: {
+          value: amount / 100,
+          order_id: normalized.transactionHash,
+        },
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar Purchase para Meta:", error.response?.data || error.message);
+      });
+  }
 
   return normalized;
 }

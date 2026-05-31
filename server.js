@@ -6,12 +6,14 @@ const cors = require("cors");
 
 const paymentRoutes = require("./routes/payments");
 const webhookRoutes = require("./routes/webhooks");
+const metaEventRoutes = require("./routes/metaEvents");
 
 const app = express();
 const port = process.env.PORT || 3000;
 const host = "0.0.0.0";
 
 app.use(cors());
+app.set("trust proxy", true);
 app.use(express.json({ limit: "2mb" }));
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
@@ -33,6 +35,7 @@ app.get("/checkout.js", (_req, res) => {
 
 app.use("/api/payments", paymentRoutes);
 app.use("/api/webhooks", webhookRoutes);
+app.use("/api/events", metaEventRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({

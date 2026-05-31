@@ -6,9 +6,46 @@ const productPayload = {
   content_type: "product",
 };
 
+function getCookie(name) {
+  return document.cookie
+    .split("; ")
+    .find((entry) => entry.startsWith(`${name}=`))
+    ?.split("=")[1];
+}
+
+function createEventId(eventName) {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return `${eventName}-${crypto.randomUUID()}`;
+  return `${eventName}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function trackMetaEvent(eventName, payload = productPayload) {
+  const eventId = createEventId(eventName);
+
+  if (typeof fbq === "function") fbq("track", eventName, payload, { eventID: eventId });
+
+  fetch("/api/events/meta", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    keepalive: true,
+    body: JSON.stringify({
+      event_name: eventName,
+      event_id: eventId,
+      event_source_path: window.location.pathname,
+      fbp: getCookie("_fbp"),
+      fbc: getCookie("_fbc"),
+      custom_data: payload,
+    }),
+  }).catch(() => {});
+}
+
+trackMetaEvent("PageView");
+trackMetaEvent("ViewContent");
+
 document.querySelectorAll(".buy-button").forEach((button) => {
   button.addEventListener("click", () => {
-    if (typeof fbq === "function") fbq("track", "AddToCart", productPayload);
+    trackMetaEvent("AddToCart");
     button.textContent = "Preparando pagamento...";
     button.disabled = true;
     window.setTimeout(() => {

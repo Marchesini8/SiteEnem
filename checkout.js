@@ -17,6 +17,40 @@ const productPayload = {
   content_type: "product",
 };
 
+function getCookie(name) {
+  return document.cookie
+    .split("; ")
+    .find((entry) => entry.startsWith(`${name}=`))
+    ?.split("=")[1];
+}
+
+function createEventId(eventName) {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return `${eventName}-${crypto.randomUUID()}`;
+  return `${eventName}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function trackMetaEvent(eventName, payload = productPayload) {
+  const eventId = createEventId(eventName);
+
+  if (typeof fbq === "function") fbq("track", eventName, payload, { eventID: eventId });
+
+  fetch("/api/events/meta", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    keepalive: true,
+    body: JSON.stringify({
+      event_name: eventName,
+      event_id: eventId,
+      event_source_path: window.location.pathname,
+      fbp: getCookie("_fbp"),
+      fbc: getCookie("_fbc"),
+      custom_data: payload,
+    }),
+  }).catch(() => {});
+}
+
 function setFeedback(message = "", type = "info") {
   if (!checkoutFeedback) return;
   checkoutFeedback.textContent = message;
@@ -121,6 +155,8 @@ function showPixResult(data = {}) {
   window.setTimeout(() => pixResultPage.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
 }
 
+trackMetaEvent("PageView");
+
 checkoutForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -135,7 +171,7 @@ checkoutForm?.addEventListener("submit", async (event) => {
     return;
   }
 
-  if (typeof fbq === "function") fbq("track", "InitiateCheckout", productPayload);
+  trackMetaEvent("InitiateCheckout");
 
   generatePixButton.disabled = true;
   generatePixButton.textContent = "Gerando Pix...";

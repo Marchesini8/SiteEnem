@@ -3,7 +3,7 @@ const webhookService = require("../services/ironpayWebhookService");
 
 const router = express.Router();
 
-router.post("/ironpay", (req, res) => {
+router.post("/ironpay", async (req, res) => {
   try {
     const receivedKey =
       req.headers["x-webhook-secret"] ||
@@ -11,7 +11,7 @@ router.post("/ironpay", (req, res) => {
       req.headers.authorization?.replace(/^Bearer\s+/i, "");
 
     webhookService.validateWebhookKey(receivedKey);
-    const result = webhookService.processWebhook(req.body);
+    const result = await webhookService.processWebhook(req.body);
 
     return res.status(200).json({
       received: true,
