@@ -195,6 +195,10 @@ p {
   cursor: pointer;
 }
 
+.play-button[hidden] {
+  display: none;
+}
+
 .play-button span {
   display: grid;
   width: 96px;

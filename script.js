@@ -27,6 +27,10 @@ playButton?.addEventListener("click", async () => {
   await video.play();
 });
 
+video?.addEventListener("play", () => {
+  if (playButton) playButton.hidden = true;
+});
+
 const countdown = document.querySelector("#countdown");
 let remaining = 47 * 60;
 
